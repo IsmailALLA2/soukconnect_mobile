@@ -4,11 +4,29 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/supabase/supabase_config.dart';
+import '../../../../core/utils/failure.dart';
+import '../../data/repositories/auth_repository_impl.dart';
+import '../../domain/entities/user_entity.dart';
+import '../../domain/repositories/auth_repository.dart';
+import '../../domain/usecases/get_current_user_usecase.dart';
+import '../../domain/usecases/sign_in_usecase.dart';
+import '../../domain/usecases/sign_out_usecase.dart';
+import '../../domain/usecases/sign_up_usecase.dart';
 
 part 'auth_provider.g.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Auth state stream — re-emits on every Supabase auth event
+// Repository provider
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Provides the concrete [AuthRepository] implementation.
+/// Swap [AuthRepositoryImpl] for a fake/mock here during testing.
+@Riverpod(keepAlive: true)
+AuthRepository authRepository(AuthRepositoryRef ref) =>
+    AuthRepositoryImpl();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Raw Supabase auth stream — used by GoRouter's refreshListenable
 // ─────────────────────────────────────────────────────────────────────────────
 
 @riverpod
@@ -16,85 +34,86 @@ Stream<AuthState> authStateStream(AuthStateStreamRef ref) =>
     supabase.auth.onAuthStateChange;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Current user — synchronous snapshot
+// Auth notifier — holds UserEntity? as async state
 // ─────────────────────────────────────────────────────────────────────────────
 
-@riverpod
-User? currentUser(CurrentUserRef ref) {
-  // Invalidate whenever auth state changes.
-  ref.watch(authStateStreamProvider);
-  return supabase.auth.currentUser;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// User role — fetched once per session from the `profiles` table
-// ─────────────────────────────────────────────────────────────────────────────
-
-/// Expected values: 'detaillant' | 'grossiste'
-@riverpod
-Future<String?> userRole(UserRoleRef ref) async {
-  final user = ref.watch(currentUserProvider);
-  if (user == null) return null;
-
-  final response = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .maybeSingle();
-
-  return response?['role'] as String?;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Auth notifier — exposes sign-in / sign-out actions
-// ─────────────────────────────────────────────────────────────────────────────
-
-@riverpod
+@Riverpod(keepAlive: true)
 class AuthNotifier extends _$AuthNotifier {
+  // Lazily constructed use-cases (resolved via provider).
+  late final SignInUseCase       _signIn;
+  late final SignUpUseCase       _signUp;
+  late final SignOutUseCase      _signOut;
+  late final GetCurrentUserUseCase _getUser;
+
   @override
-  AsyncValue<User?> build() {
-    // Mirror the current user as state.
+  Future<UserEntity?> build() async {
+    final repo = ref.watch(authRepositoryProvider);
+    _signIn  = SignInUseCase(repo);
+    _signUp  = SignUpUseCase(repo);
+    _signOut = SignOutUseCase(repo);
+    _getUser = GetCurrentUserUseCase(repo);
+
+    // Re-run when auth session changes (sign-in / sign-out / token refresh).
     ref.watch(authStateStreamProvider);
-    return AsyncData(supabase.auth.currentUser);
+
+    return _getUser();
   }
 
-  Future<void> signInWithEmail(String email, String password) async {
+  // ── Actions ───────────────────────────────────────────────────────────────
+
+  /// Signs the user in. Sets state to [AsyncLoading] then [AsyncData] or
+  /// [AsyncError] wrapping a [Failure].
+  Future<void> signIn({
+    required String email,
+    required String password,
+  }) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final response = await supabase.auth.signInWithPassword(
-        email: email,
-        password: password,
-      );
-      return response.user;
-    });
+    state = await AsyncValue.guard(
+      () => _signIn(email: email, password: password),
+    );
   }
 
+  /// Registers a new user and immediately signs them in.
   Future<void> signUp({
     required String email,
     required String password,
     required String fullName,
     required String phone,
-    required String role, // 'detaillant' | 'grossiste'
+    required String wilaya,
+    required UserRole role,
   }) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final response = await supabase.auth.signUp(
-        email: email,
+    state = await AsyncValue.guard(
+      () => _signUp(SignUpParams(
+        email:    email,
         password: password,
-        data: {'full_name': fullName, 'phone': phone, 'role': role},
-      );
-      return response.user;
-    });
+        fullName: fullName,
+        phone:    phone,
+        wilaya:   wilaya,
+        role:     role,
+      )),
+    );
   }
 
+  /// Signs out and clears the state.
   Future<void> signOut() async {
-    await supabase.auth.signOut();
+    state = const AsyncLoading();
+    await AsyncValue.guard(_signOut.call);
+    state = const AsyncData(null);
   }
+
+  // ── Convenience getters ───────────────────────────────────────────────────
+
+  /// `true` when a user is currently signed in.
+  bool get isAuthenticated => state.valueOrNull != null;
+
+  /// The current [UserEntity] or `null`.
+  UserEntity? get currentUser => state.valueOrNull;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // RouterRefreshNotifier
-// Used by GoRouter's refreshListenable to re-run redirect on auth changes.
+// Notifies GoRouter to re-run redirect whenever the auth state changes.
 // ─────────────────────────────────────────────────────────────────────────────
 
 class RouterRefreshNotifier extends ChangeNotifier {

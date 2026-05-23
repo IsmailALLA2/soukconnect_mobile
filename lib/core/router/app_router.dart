@@ -57,22 +57,26 @@ GoRouter appRouter(AppRouterRef ref) {
 
     // ── Global redirect ─────────────────────────────────────────────────────
     redirect: (context, state) async {
-      final user = ref.read(currentUserProvider);
-      final isLoggedIn = user != null;
+      // authNotifierProvider holds UserEntity? — null means not logged in.
+      final authState = ref.read(authNotifierProvider);
+      final userEntity = authState.valueOrNull;
+      final isLoggedIn = userEntity != null;
 
       final onAuthPage = state.matchedLocation == AppRoutes.login ||
           state.matchedLocation == AppRoutes.register;
+
+      // Still loading → stay on splash
+      if (authState.isLoading) return AppRoutes.splash;
 
       // Not logged in → always go to login
       if (!isLoggedIn) {
         return onAuthPage ? null : AppRoutes.login;
       }
 
-      // Already logged in but landed on splash / auth pages → route by role
+      // Already logged in but on splash / auth pages → route by role (typed enum)
       if (state.matchedLocation == AppRoutes.splash || onAuthPage) {
-        final role = await ref.read(userRoleProvider.future);
-        if (role == 'grossiste') return AppRoutes.grossisteStore;
-        return AppRoutes.detaillantStores; // default role
+        if (userEntity.isGrossiste) return AppRoutes.grossisteStore;
+        return AppRoutes.detaillantStores; // detaillant or admin default
       }
 
       return null; // no redirect needed
