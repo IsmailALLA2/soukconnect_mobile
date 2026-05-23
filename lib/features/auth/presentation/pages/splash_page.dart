@@ -85,9 +85,9 @@ class _SplashPageState extends State<SplashPage>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF1B5E20), // dark green
-              Color(0xFF2E7D32), // mid green
-              Color(0xFF388E3C), // lighter accent
+              AppColors.primary,       // #1B5E20 — deep green
+              AppColors.success,       // #2E7D32 — mid green
+              AppColors.primaryLight,  // #4C8C4A — lighter accent
             ],
           ),
         ),
@@ -108,23 +108,23 @@ class _SplashPageState extends State<SplashPage>
                           width: 88.w,
                           height: 88.w,
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.15),
+                            color: AppColors.white.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(24.r),
                             border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.3),
-                              width: 1.5,
+                              color: AppColors.white.withValues(alpha: 0.3),
+                              width: 1.5.w,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.2),
-                                blurRadius: 28,
-                                offset: const Offset(0, 10),
+                                color: AppColors.black.withValues(alpha: 0.2),
+                                blurRadius: 28.r,
+                                offset: Offset(0, 10.h),
                               ),
                             ],
                           ),
                           child: Icon(
                             Icons.storefront_rounded,
-                            color: Colors.white,
+                            color: AppColors.white,
                             size: 44.sp,
                           ),
                         ),
@@ -137,12 +137,8 @@ class _SplashPageState extends State<SplashPage>
                       opacity: _logoFade,
                       child: Text(
                         'SoukConnect',
-                        style: TextStyle(
-                          fontFamily: 'Cairo',
-                          fontSize: 30.sp,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          letterSpacing: 0.5,
+                        style: AppTextStyles.headlineLarge(
+                          color: AppColors.white,
                         ),
                       ),
                     ),
@@ -153,12 +149,8 @@ class _SplashPageState extends State<SplashPage>
                       opacity: _taglineFade,
                       child: Text(
                         'Le marché de gros connecté',
-                        style: TextStyle(
-                          fontFamily: 'Cairo',
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white.withValues(alpha: 0.72),
-                          letterSpacing: 0.3,
+                        style: AppTextStyles.bodyMedium(
+                          color: AppColors.white.withValues(alpha: 0.72),
                         ),
                       ),
                     ),
@@ -231,7 +223,7 @@ class _PulsingDotsState extends State<_PulsingDots>
                 width: size.w,
                 height: size.w,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: opacity),
+                  color: AppColors.white.withValues(alpha: opacity),
                   shape: BoxShape.circle,
                 ),
               ),
