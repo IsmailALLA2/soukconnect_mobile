@@ -3,9 +3,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/l10n/app_localizations.dart';
-import 'core/router/app_router.dart'; // AppRoutes + appRouterProvider
+import 'core/router/app_router.dart';
 import 'core/router/locale_provider.dart';
 import 'core/supabase/supabase_config.dart';
+import 'core/theme/app_theme.dart';
+import 'core/theme/theme_provider.dart';
 import 'core/utils/sizer.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -37,9 +39,7 @@ class SoukConnectApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // 3. Watch the persisted locale. Falls back to French while loading.
     final locale = ref.watch(localeProvider).valueOrNull ?? const Locale('fr');
-
-    // 4. SizerInit — must wrap MaterialApp to capture screen dimensions.
-    // 5. appRouterProvider — keepAlive Riverpod-managed GoRouter.
+    final themeMode = ref.watch(themeModeProvider).valueOrNull ?? ThemeMode.system;
     final router = ref.watch(appRouterProvider);
 
     return SizerInit(
@@ -71,21 +71,9 @@ class SoukConnectApp extends ConsumerWidget {
         },
 
         // ── Theme ──────────────────────────────────────────────────────────
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF1A6B3C), // SoukConnect brand green
-            brightness: Brightness.light,
-          ),
-          useMaterial3: true,
-        ),
-        darkTheme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF1A6B3C),
-            brightness: Brightness.dark,
-          ),
-          useMaterial3: true,
-        ),
-        themeMode: ThemeMode.system,
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: themeMode,
       ),
     );
   }
