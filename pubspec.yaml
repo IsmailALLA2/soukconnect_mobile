@@ -1,0 +1,59 @@
+name: soukconnect_mobile
+description: "Connect grossistes and détaillants in Morocco"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # Backend
+  supabase_flutter: ^2.3.0
+
+  # State management
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+  hooks_riverpod: ^2.5.1
+  flutter_hooks: ^0.20.5
+
+  # Navigation
+  go_router: ^13.2.0
+
+  # Location & Maps
+  geolocator: ^11.0.0
+  flutter_map: ^6.0.0
+  latlong2: ^0.9.0
+
+  # UI & Assets
+  cached_network_image: ^3.3.0
+  iconsax: ^0.0.8
+
+  # Localization
+  intl: ^0.20.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+  # Code generation
+  riverpod_generator: ^2.4.0
+  build_runner: ^2.4.9
+
+  # Linting
+  custom_lint: ^0.6.4
+  riverpod_lint: ^2.3.10
+
+flutter:
+
+  uses-material-design: true
+
