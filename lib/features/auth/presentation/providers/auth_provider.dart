@@ -118,8 +118,17 @@ class AuthNotifier extends _$AuthNotifier {
 
 class RouterRefreshNotifier extends ChangeNotifier {
   RouterRefreshNotifier(Ref ref) {
+    // 1. Fires on Supabase auth events (sign-in, sign-out, token refresh).
     ref.listen<AsyncValue<AuthState>>(
       authStateStreamProvider,
+      (_, __) => notifyListeners(),
+    );
+
+    // 2. Fires when authNotifierProvider finishes its initial build()
+    //    (i.e. getCurrentUser() completes). Without this, the router
+    //    never re-runs redirect after the splash → app gets stuck.
+    ref.listen<AsyncValue<UserEntity?>>(
+      authNotifierProvider,
       (_, __) => notifyListeners(),
     );
   }

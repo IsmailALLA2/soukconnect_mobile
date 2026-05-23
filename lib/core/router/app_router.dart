@@ -50,6 +50,16 @@ GoRouter appRouter(AppRouterRef ref) {
   // triggering the redirect callback below.
   final refreshNotifier = RouterRefreshNotifier(ref);
 
+  // ── Minimum splash duration ──────────────────────────────────────────────
+  // On cold open, authNotifierProvider can resolve before the first frame
+  // renders, so the splash is never seen. This flag ensures we always show
+  // the splash for at least 1.5 s (the full animation length).
+  bool splashReady = false;
+  Future.delayed(const Duration(milliseconds: 1500), () {
+    splashReady = true;
+    refreshNotifier.notifyListeners();
+  });
+
   return GoRouter(
     initialLocation: AppRoutes.splash,
     debugLogDiagnostics: false, // set true while developing
@@ -57,23 +67,29 @@ GoRouter appRouter(AppRouterRef ref) {
 
     // ── Global redirect ─────────────────────────────────────────────────────
     redirect: (context, state) async {
+      // Always hold on splash until the minimum display time has passed.
+      if (!splashReady) return AppRoutes.splash;
+
       // authNotifierProvider holds UserEntity? — null means not logged in.
       final authState = ref.read(authNotifierProvider);
+
+      // Still resolving initial session → show splash while we wait.
+      if (authState.isLoading) return AppRoutes.splash;
+
+      // If an error occurred (e.g. profiles table missing, network issue)
+      // treat as unauthenticated and fall through to /login.
       final userEntity = authState.valueOrNull;
       final isLoggedIn = userEntity != null;
 
       final onAuthPage = state.matchedLocation == AppRoutes.login ||
           state.matchedLocation == AppRoutes.register;
 
-      // Still loading → stay on splash
-      if (authState.isLoading) return AppRoutes.splash;
-
       // Not logged in → always go to login
       if (!isLoggedIn) {
         return onAuthPage ? null : AppRoutes.login;
       }
 
-      // Already logged in but on splash / auth pages → route by role (typed enum)
+      // Already logged in but on splash / auth pages → route by role
       if (state.matchedLocation == AppRoutes.splash || onAuthPage) {
         if (userEntity.isGrossiste) return AppRoutes.grossisteStore;
         return AppRoutes.detaillantStores; // detaillant or admin default

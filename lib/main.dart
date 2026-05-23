@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,7 +18,10 @@ import 'core/utils/sizer.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 1. Initialise Supabase before anything accesses the client.
+  // 1. Load .env file from the app bundle.
+  await dotenv.load(fileName: '.env');
+
+  // 2. Initialise Supabase (reads credentials from dotenv).
   await SupabaseConfig.initialize();
 
   runApp(

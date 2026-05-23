@@ -1,45 +1,45 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Supabase configuration
+// Supabase configuration — reads credentials from .env
 //
-// Replace the values below with your project's URL and anon key from:
-//   https://app.supabase.com → Settings → API
+// Required keys in .env (see .env.example):
+//   SUPABASE_URL      → https://YOUR_PROJECT_ID.supabase.co
+//   SUPABASE_ANON_KEY → your project anon/public key
 //
-// ⚠️  Never commit real credentials to a public repository.
-//     Use a .env file + --dart-define or flutter_dotenv for production.
+// .env is loaded in main() before runApp() via dotenv.load().
+// .env is listed in pubspec.yaml under flutter.assets so it is
+// bundled into the app. Add .env to .gitignore — never commit secrets.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const _supabaseUrl = 'https://YOUR_PROJECT_ID.supabase.co';
-const _supabaseAnonKey = 'YOUR_ANON_KEY';
-
-/// Initialises the Supabase client.
-///
-/// Must be awaited in [main] before [runApp]:
-/// ```dart
-/// await SupabaseConfig.initialize();
-/// ```
 class SupabaseConfig {
   SupabaseConfig._(); // prevent instantiation
 
+  /// Reads credentials from the loaded .env and initialises the client.
+  ///
+  /// Must be awaited in [main] after [dotenv.load()]:
+  /// ```dart
+  /// await dotenv.load(fileName: '.env');
+  /// await SupabaseConfig.initialize();
+  /// ```
   static Future<void> initialize() async {
+    final url     = dotenv.env['SUPABASE_URL']      ?? '';
+    final anonKey = dotenv.env['SUPABASE_ANON_KEY'] ?? '';
+
+    assert(url.isNotEmpty,     'SUPABASE_URL is missing from .env');
+    assert(anonKey.isNotEmpty, 'SUPABASE_ANON_KEY is missing from .env');
+
     await Supabase.initialize(
-      url: _supabaseUrl,
-      anonKey: _supabaseAnonKey,
-      // Uncomment and configure as needed:
-      // authOptions: FlutterAuthClientOptions(
-      //   authFlowType: AuthFlowType.pkce,
-      // ),
-      // realtimeClientOptions: const RealtimeClientOptions(
-      //   logLevel: RealtimeLogLevel.info,
-      // ),
+      url:     url,
+      anonKey: anonKey,
     );
   }
 }
 
 /// Convenience getter for the Supabase client.
 ///
-/// Use anywhere in the app after [SupabaseConfig.initialize] has been called:
+/// Available anywhere after [SupabaseConfig.initialize] has been called:
 /// ```dart
 /// final user = supabase.auth.currentUser;
 /// final data = await supabase.from('products').select();
