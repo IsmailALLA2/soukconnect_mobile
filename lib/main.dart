@@ -3,7 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/l10n/app_localizations.dart';
-import 'core/router/app_router.dart';
+import 'core/router/app_router.dart'; // AppRoutes + appRouterProvider
 import 'core/router/locale_provider.dart';
 import 'core/supabase/supabase_config.dart';
 import 'core/utils/sizer.dart';
@@ -39,6 +39,9 @@ class SoukConnectApp extends ConsumerWidget {
     final locale = ref.watch(localeProvider).valueOrNull ?? const Locale('fr');
 
     // 4. SizerInit — must wrap MaterialApp to capture screen dimensions.
+    // 5. appRouterProvider — keepAlive Riverpod-managed GoRouter.
+    final router = ref.watch(appRouterProvider);
+
     return SizerInit(
       child: MaterialApp.router(
         // ── Identity ───────────────────────────────────────────────────────
@@ -46,7 +49,7 @@ class SoukConnectApp extends ConsumerWidget {
         debugShowCheckedModeBanner: false,
 
         // ── Routing ────────────────────────────────────────────────────────
-        routerConfig: appRouter,
+        routerConfig: router,
 
         // ── Localization ───────────────────────────────────────────────────
         locale: locale,

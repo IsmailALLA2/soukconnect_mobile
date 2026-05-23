@@ -1,141 +1,163 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/auth/presentation/pages/register_page.dart';
+import '../../features/auth/presentation/pages/splash_page.dart';
+import '../../features/auth/presentation/providers/auth_provider.dart';
+import '../../features/detaillant/presentation/pages/detaillant_shell.dart';
+import '../../features/detaillant/presentation/pages/my_orders_page.dart';
+import '../../features/detaillant/presentation/pages/nearby_stores_page.dart';
+import '../../features/grossiste/presentation/pages/grossiste_shell.dart';
+import '../../features/grossiste/presentation/pages/incoming_orders_page.dart';
+import '../../features/grossiste/presentation/pages/my_products_page.dart';
+import '../../features/grossiste/presentation/pages/my_store_page.dart';
+import '../../shared/widgets/profile_page.dart';
+
+part 'app_router.g.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// App Router
-//
-// Placeholder routes — replace with real feature pages as they are built.
-// Route names are defined as constants to avoid magic strings.
+// Named route paths — use these constants everywhere, never raw strings
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Named route constants.
 abstract class AppRoutes {
+  // Auth
   static const splash = '/';
   static const login = '/login';
   static const register = '/register';
-  static const detaillantHome = '/detaillant';
-  static const grossisteHome = '/grossiste';
-  static const settings = '/settings';
+
+  // Détaillant shell tabs
+  static const detaillantStores = '/detaillant/stores';
+  static const detaillantOrders = '/detaillant/orders';
+  static const detaillantProfile = '/detaillant/profile';
+
+  // Grossiste shell tabs
+  static const grossisteStore = '/grossiste/store';
+  static const grossisteProducts = '/grossiste/products';
+  static const grossisteOrders = '/grossiste/orders';
+  static const grossisteProfile = '/grossiste/profile';
 }
 
-/// The top-level [GoRouter] instance used by [MaterialApp.router].
-///
-/// Riverpod integration: expose this via a [Provider] once authentication
-/// state needs to influence redirects. For now it is a plain singleton.
-final appRouter = GoRouter(
-  initialLocation: AppRoutes.splash,
-  debugLogDiagnostics: true, // set to false in production
+// ─────────────────────────────────────────────────────────────────────────────
+// Router provider
+// @Riverpod(keepAlive: true) — GoRouter must never be recreated mid-session
+// ─────────────────────────────────────────────────────────────────────────────
 
-  // ── Routes ────────────────────────────────────────────────────────────────
-  routes: [
-    GoRoute(
-      path: AppRoutes.splash,
-      name: 'splash',
-      builder: (context, state) => const _SplashScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.login,
-      name: 'login',
-      builder: (context, state) => const _PlaceholderScreen(label: 'Login'),
-    ),
-    GoRoute(
-      path: AppRoutes.register,
-      name: 'register',
-      builder: (context, state) =>
-          const _PlaceholderScreen(label: 'Register'),
-    ),
-    GoRoute(
-      path: AppRoutes.detaillantHome,
-      name: 'detaillant',
-      builder: (context, state) =>
-          const _PlaceholderScreen(label: 'Détaillant Home'),
-    ),
-    GoRoute(
-      path: AppRoutes.grossisteHome,
-      name: 'grossiste',
-      builder: (context, state) =>
-          const _PlaceholderScreen(label: 'Grossiste Home'),
-    ),
-    GoRoute(
-      path: AppRoutes.settings,
-      name: 'settings',
-      builder: (context, state) =>
-          const _PlaceholderScreen(label: 'Settings'),
-    ),
-  ],
+@Riverpod(keepAlive: true)
+GoRouter appRouter(AppRouterRef ref) {
+  // RouterRefreshNotifier wakes up GoRouter whenever auth state changes,
+  // triggering the redirect callback below.
+  final refreshNotifier = RouterRefreshNotifier(ref);
 
-  // ── Error page ────────────────────────────────────────────────────────────
-  errorBuilder: (context, state) => Scaffold(
-    body: Center(
-      child: Text(
-        'Page introuvable\n${state.error}',
-        textAlign: TextAlign.center,
+  return GoRouter(
+    initialLocation: AppRoutes.splash,
+    debugLogDiagnostics: false, // set true while developing
+    refreshListenable: refreshNotifier,
+
+    // ── Global redirect ─────────────────────────────────────────────────────
+    redirect: (context, state) async {
+      final user = ref.read(currentUserProvider);
+      final isLoggedIn = user != null;
+
+      final onAuthPage = state.matchedLocation == AppRoutes.login ||
+          state.matchedLocation == AppRoutes.register;
+
+      // Not logged in → always go to login
+      if (!isLoggedIn) {
+        return onAuthPage ? null : AppRoutes.login;
+      }
+
+      // Already logged in but landed on splash / auth pages → route by role
+      if (state.matchedLocation == AppRoutes.splash || onAuthPage) {
+        final role = await ref.read(userRoleProvider.future);
+        if (role == 'grossiste') return AppRoutes.grossisteStore;
+        return AppRoutes.detaillantStores; // default role
+      }
+
+      return null; // no redirect needed
+    },
+
+    // ── Route tree ──────────────────────────────────────────────────────────
+    routes: [
+      // ── Auth ──────────────────────────────────────────────────────────────
+      GoRoute(
+        path: AppRoutes.splash,
+        builder: (context, state) => const SplashPage(),
       ),
-    ),
-  ),
-);
+      GoRoute(
+        path: AppRoutes.login,
+        builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.register,
+        builder: (context, state) => const RegisterPage(),
+      ),
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Temporary placeholder screens — replace with real pages
-// ─────────────────────────────────────────────────────────────────────────────
+      // ── Détaillant shell ───────────────────────────────────────────────────
+      ShellRoute(
+        builder: (context, state, child) =>
+            DetaillantShell(child: child),
+        routes: [
+          GoRoute(
+            path: AppRoutes.detaillantStores,
+            builder: (context, state) => const NearbyStoresPage(),
+          ),
+          GoRoute(
+            path: AppRoutes.detaillantOrders,
+            builder: (context, state) => const MyOrdersPage(),
+          ),
+          GoRoute(
+            path: AppRoutes.detaillantProfile,
+            builder: (context, state) => const ProfilePage(),
+          ),
+        ],
+      ),
 
-class _SplashScreen extends StatefulWidget {
-  const _SplashScreen();
+      // ── Grossiste shell ────────────────────────────────────────────────────
+      ShellRoute(
+        builder: (context, state, child) =>
+            GrossisteShell(child: child),
+        routes: [
+          GoRoute(
+            path: AppRoutes.grossisteStore,
+            builder: (context, state) => const MyStorePage(),
+          ),
+          GoRoute(
+            path: AppRoutes.grossisteProducts,
+            builder: (context, state) => const MyProductsPage(),
+          ),
+          GoRoute(
+            path: AppRoutes.grossisteOrders,
+            builder: (context, state) => const IncomingOrdersPage(),
+          ),
+          GoRoute(
+            path: AppRoutes.grossisteProfile,
+            builder: (context, state) => const ProfilePage(),
+          ),
+        ],
+      ),
+    ],
 
-  @override
-  State<_SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<_SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    // TODO: Check auth state and redirect appropriately.
-    // For now, navigate to login after a short delay.
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) context.go(AppRoutes.login);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1A6B3C),
+    // ── 404 page ─────────────────────────────────────────────────────────────
+    errorBuilder: (context, state) => Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.storefront, size: 80, color: Colors.white),
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text(
-              'SoukConnect',
-              style: Theme.of(context)
-                  .textTheme
-                  .headlineLarge
-                  ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+              'Page introuvable',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            TextButton(
+              onPressed: () => context.go(AppRoutes.splash),
+              child: const Text('Retour à l\'accueil'),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _PlaceholderScreen extends StatelessWidget {
-  const _PlaceholderScreen({required this.label});
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(label)),
-      body: Center(
-        child: Text(
-          '$label\n(coming soon)',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-      ),
-    );
-  }
+    ),
+  );
 }

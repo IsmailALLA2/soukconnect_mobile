@@ -39,6 +39,9 @@ dependencies:
   # Localization
   intl: ^0.20.2
 
+  # Storage
+  shared_preferences: ^2.2.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
