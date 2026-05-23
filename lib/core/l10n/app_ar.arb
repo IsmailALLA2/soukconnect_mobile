@@ -1,0 +1,52 @@
+{
+  "@@locale": "ar",
+  "@@last_modified": "2026-05-23",
+
+  "appName": "سوق كونيكت",
+
+  "login": "تسجيل الدخول",
+
+  "register": "إنشاء حساب",
+
+  "email": "البريد الإلكتروني",
+
+  "password": "كلمة المرور",
+
+  "phone": "رقم الهاتف",
+
+  "fullName": "الاسم الكامل",
+
+  "wilaya": "الولاية",
+
+  "role": "الدور",
+
+  "grossiste": "تاجر جملة",
+
+  "detaillant": "تاجر تجزئة",
+
+  "nearbyStores": "المحلات القريبة",
+
+  "myOrders": "طلباتي",
+
+  "myStore": "محلي",
+
+  "products": "المنتجات",
+
+  "addToCart": "إضافة للسلة",
+
+  "placeOrder": "تأكيد الطلب",
+
+  "pending": "في الانتظار",
+
+  "confirmed": "مؤكد",
+
+  "cancelled": "ملغى",
+
+  "delivered": "تم التوصيل",
+
+  "logout": "تسجيل الخروج",
+
+  "settings": "الإعدادات",
+
+  "search": "ابحث..."
+}

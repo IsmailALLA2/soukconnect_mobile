@@ -1,0 +1,76 @@
+{
+  "@@locale": "fr",
+  "@@last_modified": "2026-05-23",
+
+  "appName": "SoukConnect",
+  "@appName": { "description": "The name of the application" },
+
+  "login": "Connexion",
+  "@login": { "description": "Login button / page title" },
+
+  "register": "S'inscrire",
+  "@register": { "description": "Register button / page title" },
+
+  "email": "Adresse e-mail",
+  "@email": { "description": "Email input label" },
+
+  "password": "Mot de passe",
+  "@password": { "description": "Password input label" },
+
+  "phone": "Numéro de téléphone",
+  "@phone": { "description": "Phone input label" },
+
+  "fullName": "Nom complet",
+  "@fullName": { "description": "Full name input label" },
+
+  "wilaya": "Wilaya",
+  "@wilaya": { "description": "Wilaya / province selector label" },
+
+  "role": "Rôle",
+  "@role": { "description": "User role selector label" },
+
+  "grossiste": "Grossiste",
+  "@grossiste": { "description": "Wholesaler role label" },
+
+  "detaillant": "Détaillant",
+  "@detaillant": { "description": "Retailer role label" },
+
+  "nearbyStores": "Commerces à proximité",
+  "@nearbyStores": { "description": "Home screen section: nearby stores" },
+
+  "myOrders": "Mes commandes",
+  "@myOrders": { "description": "Tab / page: my orders" },
+
+  "myStore": "Mon commerce",
+  "@myStore": { "description": "Tab / page: my store" },
+
+  "products": "Produits",
+  "@products": { "description": "Products section / page title" },
+
+  "addToCart": "Ajouter au panier",
+  "@addToCart": { "description": "Add to cart button" },
+
+  "placeOrder": "Passer la commande",
+  "@placeOrder": { "description": "Place order button" },
+
+  "pending": "En attente",
+  "@pending": { "description": "Order status: pending" },
+
+  "confirmed": "Confirmée",
+  "@confirmed": { "description": "Order status: confirmed" },
+
+  "cancelled": "Annulée",
+  "@cancelled": { "description": "Order status: cancelled" },
+
+  "delivered": "Livrée",
+  "@delivered": { "description": "Order status: delivered" },
+
+  "logout": "Déconnexion",
+  "@logout": { "description": "Logout button" },
+
+  "settings": "Paramètres",
+  "@settings": { "description": "Settings page title" },
+
+  "search": "Rechercher...",
+  "@search": { "description": "Search field hint text" }
+}
