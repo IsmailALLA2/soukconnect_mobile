@@ -85,9 +85,9 @@ class _SplashPageState extends State<SplashPage>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppColors.primary,       // #1B5E20 — deep green
-              AppColors.success,       // #2E7D32 — mid green
-              AppColors.primaryLight,  // #4C8C4A — lighter accent
+              AppColors.primary,   // deep green
+              AppColors.success,   // mid green
+              AppColors.primaryLight, // lighter accent
             ],
           ),
         ),
@@ -112,11 +112,11 @@ class _SplashPageState extends State<SplashPage>
                             borderRadius: BorderRadius.circular(24.r),
                             border: Border.all(
                               color: AppColors.white.withValues(alpha: 0.3),
-                              width: 1.5.w,
+                              width: 1.5,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.black.withValues(alpha: 0.2),
+                                color: AppColors.shadowDark,
                                 blurRadius: 28.r,
                                 offset: Offset(0, 10.h),
                               ),
@@ -139,7 +139,7 @@ class _SplashPageState extends State<SplashPage>
                         'SoukConnect',
                         style: AppTextStyles.headlineLarge(
                           color: AppColors.white,
-                        ),
+                        ).copyWith(letterSpacing: 0.5),
                       ),
                     ),
                     SizedBox(height: 8.h),
@@ -149,9 +149,9 @@ class _SplashPageState extends State<SplashPage>
                       opacity: _taglineFade,
                       child: Text(
                         'Le marché de gros connecté',
-                        style: AppTextStyles.bodyMedium(
+                        style: AppTextStyles.bodySmall(
                           color: AppColors.white.withValues(alpha: 0.72),
-                        ),
+                        ).copyWith(letterSpacing: 0.3),
                       ),
                     ),
                     SizedBox(height: 72.h),
