@@ -4,6 +4,7 @@ import '../../data/repositories/store_repository_impl.dart';
 import '../../domain/entities/store_entity.dart';
 import '../../domain/repositories/store_repository.dart';
 import '../../domain/usecases/get_nearby_stores_usecase.dart';
+import '../../domain/usecases/get_store_by_id_usecase.dart';
 import '../../domain/usecases/get_stores_by_category_usecase.dart';
 import 'location_provider.dart';
 
@@ -98,4 +99,16 @@ Future<List<StoreEntity>> storesByCategory(
   final repo    = ref.watch(storeRepositoryProvider);
   final useCase = GetStoresByCategoryUseCase(repo);
   return useCase(category);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// storeDetailProvider — fetches a single store by ID
+// Auto-disposed when the StoreDetailPage leaves the widget tree.
+// ─────────────────────────────────────────────────────────────────────────────
+
+@riverpod
+Future<StoreEntity> storeDetail(StoreDetailRef ref, String storeId) {
+  final repo    = ref.watch(storeRepositoryProvider);
+  final useCase = GetStoreByIdUseCase(repo);
+  return useCase(storeId);
 }

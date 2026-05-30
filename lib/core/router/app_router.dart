@@ -9,6 +9,9 @@ import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/detaillant/presentation/pages/detaillant_shell.dart';
 import '../../features/detaillant/presentation/pages/my_orders_page.dart';
 import '../../features/detaillant/presentation/pages/nearby_stores_page.dart';
+import '../../features/detaillant/presentation/pages/cart_page.dart';
+import '../../features/detaillant/presentation/pages/store_detail_page.dart';
+import '../../features/detaillant/presentation/pages/store_map_page.dart';
 import '../../features/grossiste/presentation/pages/grossiste_shell.dart';
 import '../../features/grossiste/presentation/pages/incoming_orders_page.dart';
 import '../../features/grossiste/presentation/pages/my_products_page.dart';
@@ -34,6 +37,9 @@ abstract class AppRoutes {
 
   // Détaillant detail pages (outside shell — full screen)
   static const detaillantStoreDetail = '/detaillant/store/:storeId';
+
+  static const detaillantCart = '/detaillant/cart';
+  static const detaillantStoreMap = '/detaillant/map/:storeId';
 
   /// Builds a concrete store detail path from [storeId].
   static String storeDetail(String storeId) => '/detaillant/store/$storeId';
@@ -63,7 +69,7 @@ GoRouter appRouter(AppRouterRef ref) {
   bool splashReady = false;
   Future.delayed(const Duration(milliseconds: 1500), () {
     splashReady = true;
-    refreshNotifier.notifyListeners();
+    refreshNotifier.refresh();
   });
 
   return GoRouter(
@@ -138,6 +144,20 @@ GoRouter appRouter(AppRouterRef ref) {
             builder: (context, state) => const ProfilePage(),
           ),
         ],
+      ),
+
+      // ── Détaillant detail pages (full-screen, outside shell) ───────────────
+      GoRoute(
+        path: AppRoutes.detaillantStoreDetail,
+        builder: (context, state) => const StoreDetailPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.detaillantCart,
+        builder: (context, state) => const CartPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.detaillantStoreMap,
+        builder: (context, state) => const StoreMapPage(),
       ),
 
       // ── Grossiste shell ────────────────────────────────────────────────────

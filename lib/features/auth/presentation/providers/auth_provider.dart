@@ -117,6 +117,8 @@ class AuthNotifier extends _$AuthNotifier {
 // ─────────────────────────────────────────────────────────────────────────────
 
 class RouterRefreshNotifier extends ChangeNotifier {
+  void refresh() => notifyListeners();
+
   RouterRefreshNotifier(Ref ref) {
     // 1. Fires on Supabase auth events (sign-in, sign-out, token refresh).
     ref.listen<AsyncValue<AuthState>>(

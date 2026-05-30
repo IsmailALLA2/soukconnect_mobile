@@ -192,6 +192,134 @@ class _StoresByCategoryProviderElement
   StoreCategory get category => (origin as StoresByCategoryProvider).category;
 }
 
+String _$storeDetailHash() => r'09f1e736c9c991cfe93ef8d386da17ceaa9dc142';
+
+/// See also [storeDetail].
+@ProviderFor(storeDetail)
+const storeDetailProvider = StoreDetailFamily();
+
+/// See also [storeDetail].
+class StoreDetailFamily extends Family<AsyncValue<StoreEntity>> {
+  /// See also [storeDetail].
+  const StoreDetailFamily();
+
+  /// See also [storeDetail].
+  StoreDetailProvider call(
+    String storeId,
+  ) {
+    return StoreDetailProvider(
+      storeId,
+    );
+  }
+
+  @override
+  StoreDetailProvider getProviderOverride(
+    covariant StoreDetailProvider provider,
+  ) {
+    return call(
+      provider.storeId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'storeDetailProvider';
+}
+
+/// See also [storeDetail].
+class StoreDetailProvider extends AutoDisposeFutureProvider<StoreEntity> {
+  /// See also [storeDetail].
+  StoreDetailProvider(
+    String storeId,
+  ) : this._internal(
+          (ref) => storeDetail(
+            ref as StoreDetailRef,
+            storeId,
+          ),
+          from: storeDetailProvider,
+          name: r'storeDetailProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$storeDetailHash,
+          dependencies: StoreDetailFamily._dependencies,
+          allTransitiveDependencies:
+              StoreDetailFamily._allTransitiveDependencies,
+          storeId: storeId,
+        );
+
+  StoreDetailProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.storeId,
+  }) : super.internal();
+
+  final String storeId;
+
+  @override
+  Override overrideWith(
+    FutureOr<StoreEntity> Function(StoreDetailRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: StoreDetailProvider._internal(
+        (ref) => create(ref as StoreDetailRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        storeId: storeId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<StoreEntity> createElement() {
+    return _StoreDetailProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is StoreDetailProvider && other.storeId == storeId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, storeId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin StoreDetailRef on AutoDisposeFutureProviderRef<StoreEntity> {
+  /// The parameter `storeId` of this provider.
+  String get storeId;
+}
+
+class _StoreDetailProviderElement
+    extends AutoDisposeFutureProviderElement<StoreEntity> with StoreDetailRef {
+  _StoreDetailProviderElement(super.provider);
+
+  @override
+  String get storeId => (origin as StoreDetailProvider).storeId;
+}
+
 String _$nearbyStoresNotifierHash() =>
     r'556650c19e1605bbbb9d3f519e38a985644c5ef9';
 

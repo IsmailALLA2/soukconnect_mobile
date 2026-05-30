@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'location_provider.dart';
+part of 'place_order_usecase.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$locationNotifierHash() => r'b28db59671b9f64b93d2095785bff2db74b53b7c';
+String _$placeOrderUseCaseHash() => r'bc5ab1a45fa47bc553b4660c9d7e3c8dfb1cac99';
 
-/// See also [LocationNotifier].
-@ProviderFor(LocationNotifier)
-final locationNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<LocationNotifier, Position?>.internal(
-  LocationNotifier.new,
-  name: r'locationNotifierProvider',
+/// See also [placeOrderUseCase].
+@ProviderFor(placeOrderUseCase)
+final placeOrderUseCaseProvider =
+    AutoDisposeProvider<PlaceOrderUseCase>.internal(
+  placeOrderUseCase,
+  name: r'placeOrderUseCaseProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$locationNotifierHash,
+      : _$placeOrderUseCaseHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$LocationNotifier = AutoDisposeAsyncNotifier<Position?>;
+typedef PlaceOrderUseCaseRef = AutoDisposeProviderRef<PlaceOrderUseCase>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

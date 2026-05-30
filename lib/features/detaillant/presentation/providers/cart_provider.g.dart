@@ -1,24 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'app_router.dart';
+part of 'cart_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appRouterHash() => r'fad412697089ad17052c68800bf8ce83ff486d20';
+String _$cartNotifierHash() => r'88809407270001c1aea804de14b94091f324930c';
 
-/// See also [appRouter].
-@ProviderFor(appRouter)
-final appRouterProvider = Provider<GoRouter>.internal(
-  appRouter,
-  name: r'appRouterProvider',
+/// See also [CartNotifier].
+@ProviderFor(CartNotifier)
+final cartNotifierProvider =
+    NotifierProvider<CartNotifier, List<CartItem>>.internal(
+  CartNotifier.new,
+  name: r'cartNotifierProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$appRouterHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$cartNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef AppRouterRef = ProviderRef<GoRouter>;
+typedef _$CartNotifier = Notifier<List<CartItem>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
