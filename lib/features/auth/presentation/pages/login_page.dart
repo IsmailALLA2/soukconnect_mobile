@@ -81,6 +81,8 @@ class LoginPage extends HookConsumerWidget {
         formN.setError(e.message);
       } catch (_) {
         formN.setError('Une erreur inattendue est survenue.');
+      } finally {
+        formN.setLoading(false);
       }
     }
 

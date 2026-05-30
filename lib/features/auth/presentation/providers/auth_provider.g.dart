@@ -39,7 +39,7 @@ final authStateStreamProvider = AutoDisposeStreamProvider<AuthState>.internal(
 );
 
 typedef AuthStateStreamRef = AutoDisposeStreamProviderRef<AuthState>;
-String _$authNotifierHash() => r'771f9e992cb70fd7f1b0927e8ade2af73e0e7673';
+String _$authNotifierHash() => r'35fb22df105aae5239659b024d1576794828574e';
 
 /// See also [AuthNotifier].
 @ProviderFor(AuthNotifier)

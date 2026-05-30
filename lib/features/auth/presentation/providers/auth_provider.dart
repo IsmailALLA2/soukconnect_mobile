@@ -63,17 +63,23 @@ class AuthNotifier extends _$AuthNotifier {
 
   /// Signs the user in. Sets state to [AsyncLoading] then [AsyncData] or
   /// [AsyncError] wrapping a [Failure].
+  /// Throws the original error on failure so callers can react.
   Future<void> signIn({
     required String email,
     required String password,
   }) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
-      () => _signIn(email: email, password: password),
-    );
+    try {
+      final user = await _signIn(email: email, password: password);
+      state = AsyncData(user);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      rethrow;
+    }
   }
 
   /// Registers a new user and immediately signs them in.
+  /// Throws the original error on failure so callers can react.
   Future<void> signUp({
     required String email,
     required String password,
@@ -83,16 +89,20 @@ class AuthNotifier extends _$AuthNotifier {
     required UserRole role,
   }) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
-      () => _signUp(SignUpParams(
+    try {
+      final user = await _signUp(SignUpParams(
         email:    email,
         password: password,
         fullName: fullName,
         phone:    phone,
         wilaya:   wilaya,
         role:     role,
-      )),
-    );
+      ));
+      state = AsyncData(user);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      rethrow;
+    }
   }
 
   /// Signs out and clears the state.
