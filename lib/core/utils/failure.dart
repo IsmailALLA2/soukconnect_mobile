@@ -65,3 +65,23 @@ final class NotFoundFailure extends Failure {
 final class UnknownFailure extends Failure {
   const UnknownFailure([super.message = 'Une erreur inattendue est survenue.']);
 }
+
+// ── Location failures ─────────────────────────────────────────────────────────
+
+/// Device location services (GPS) are turned off.
+final class LocationServicesDisabledFailure extends Failure {
+  const LocationServicesDisabledFailure()
+      : super('Activez la localisation GPS dans les paramètres de votre appareil.');
+}
+
+/// The user denied the location permission when prompted.
+final class LocationPermissionDeniedFailure extends Failure {
+  const LocationPermissionDeniedFailure()
+      : super('Autorisation de localisation refusée. Veuillez l\'accorder pour voir les boutiques proches.');
+}
+
+/// The user permanently denied the location permission (must open app settings).
+final class LocationPermissionPermanentlyDeniedFailure extends Failure {
+  const LocationPermissionPermanentlyDeniedFailure()
+      : super('Localisation désactivée définitivement. Activez-la dans les paramètres de l\'application.');
+}

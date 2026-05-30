@@ -32,6 +32,12 @@ abstract class AppRoutes {
   static const detaillantOrders = '/detaillant/orders';
   static const detaillantProfile = '/detaillant/profile';
 
+  // Détaillant detail pages (outside shell — full screen)
+  static const detaillantStoreDetail = '/detaillant/store/:storeId';
+
+  /// Builds a concrete store detail path from [storeId].
+  static String storeDetail(String storeId) => '/detaillant/store/$storeId';
+
   // Grossiste shell tabs
   static const grossisteStore = '/grossiste/store';
   static const grossisteProducts = '/grossiste/products';
