@@ -136,6 +136,10 @@ GoRouter appRouter(AppRouterRef ref) {
             builder: (context, state) => const NearbyStoresPage(),
           ),
           GoRoute(
+            path: AppRoutes.detaillantCart,
+            builder: (context, state) => const CartPage(),
+          ),
+          GoRoute(
             path: AppRoutes.detaillantOrders,
             builder: (context, state) => const MyOrdersPage(),
           ),
@@ -150,10 +154,6 @@ GoRouter appRouter(AppRouterRef ref) {
       GoRoute(
         path: AppRoutes.detaillantStoreDetail,
         builder: (context, state) => const StoreDetailPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.detaillantCart,
-        builder: (context, state) => const CartPage(),
       ),
       GoRoute(
         path: AppRoutes.detaillantStoreMap,
