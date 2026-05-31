@@ -1,85 +1,47 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/sizer.dart';
+import '../../../../core/widgets/shimmer_box.dart';
 
 class IncomingOrderShimmer extends StatelessWidget {
   const IncomingOrderShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return Padding(
       padding: EdgeInsets.all(16.w),
-      itemCount: 5,
-      itemBuilder: (_, i) => Padding(
-        padding: EdgeInsets.only(bottom: 12.h),
-        child: Container(
-          height: 100.h,
+      child: ShimmerList(
+        itemCount: 5,
+        spacing: 12,
+        itemBuilder: (_, _) => Container(
+          height: 110.h,
+          padding: EdgeInsets.all(14.w),
           decoration: BoxDecoration(
-            color: AppColors.grey100,
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(12.r),
           ),
-          padding: EdgeInsets.all(14.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Container(
-                    width: 40.w,
-                    height: 40.w,
-                    decoration: BoxDecoration(
-                      color: AppColors.grey200,
-                      borderRadius: BorderRadius.circular(8.r),
+                  const ShimmerBox(width: 40, height: 40, borderRadius: 12),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const ShimmerBox(height: 14, width: 120),
+                        SizedBox(height: 6.h),
+                        const ShimmerBox(height: 12, width: 80),
+                      ],
                     ),
                   ),
-                  SizedBox(width: 10.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 120.w,
-                        height: 14.h,
-                        decoration: BoxDecoration(
-                          color: AppColors.grey200,
-                          borderRadius: BorderRadius.circular(4.r),
-                        ),
-                      ),
-                      SizedBox(height: 6.h),
-                      Container(
-                        width: 80.w,
-                        height: 12.h,
-                        decoration: BoxDecoration(
-                          color: AppColors.grey200,
-                          borderRadius: BorderRadius.circular(4.r),
-                        ),
-                      ),
-                    ],
-                  ),
+                  const ShimmerBox(height: 24, width: 80, borderRadius: 20),
                 ],
               ),
               SizedBox(height: 12.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 100.w,
-                    height: 12.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.grey200,
-                      borderRadius: BorderRadius.circular(4.r),
-                    ),
-                  ),
-                  Container(
-                    width: 60.w,
-                    height: 12.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.grey200,
-                      borderRadius: BorderRadius.circular(4.r),
-                    ),
-                  ),
-                ],
-              ),
+              const ShimmerBox(height: 12, width: double.infinity),
             ],
           ),
         ),

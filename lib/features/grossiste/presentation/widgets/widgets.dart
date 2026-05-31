@@ -4,6 +4,7 @@ export 'incoming_order_list_item.dart';
 export 'incoming_order_shimmer.dart';
 export 'product_empty_state.dart';
 export 'product_form_sheet.dart';
+export 'product_grid_card.dart';
 export 'product_list_item.dart';
 export 'product_shimmer_list.dart';
 export 'store_action_card.dart';

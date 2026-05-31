@@ -18,7 +18,7 @@ class IncomingOrderModel extends IncomingOrderEntity {
   factory IncomingOrderModel.fromJson(Map<String, dynamic> json) {
     return IncomingOrderModel(
       id: json['id'] as String,
-      detaillantId: json['client_id'] as String,
+      detaillantId: json['detaillant_id'] as String,
       detaillantName: json['detaillant_name'] as String? ?? '',
       detaillantPhone: json['detaillant_phone'] as String? ?? '',
       storeId: json['store_id'] as String,
@@ -46,7 +46,7 @@ class IncomingOrderModel extends IncomingOrderEntity {
 
     return IncomingOrderModel(
       id: json['id'] as String,
-      detaillantId: json['client_id'] as String,
+      detaillantId: json['detaillant_id'] as String,
       detaillantName: profiles?['full_name'] as String? ?? '',
       detaillantPhone: profiles?['phone'] as String? ?? '',
       storeId: json['store_id'] as String,
@@ -62,7 +62,7 @@ class IncomingOrderModel extends IncomingOrderEntity {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'client_id': detaillantId,
+        'detaillant_id': detaillantId,
         'detaillant_name': detaillantName,
         'detaillant_phone': detaillantPhone,
         'store_id': storeId,

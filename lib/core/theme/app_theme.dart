@@ -62,6 +62,35 @@ abstract class AppColors {
   static const shadow           = Color(0x1A000000); // 10% black
   static const shadowDark       = Color(0x33000000); // 20% black
   static const overlay          = Color(0x80000000); // 50% black
+
+  // ── Gradients ───────────────────────────────────────────────────────────────
+  static const gradient1 = LinearGradient(
+    colors: [Color(0xFF1B5E20), Color(0xFF4C8C4A)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const gradient2 = LinearGradient(
+    colors: [Color(0xFFFFA000), Color(0xFFF57C00)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const gradient3 = LinearGradient(
+    colors: [Color(0xFF7B1FA2), Color(0xFF0288D1)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  // ── Card shadow ─────────────────────────────────────────────────────────────
+  static const cardShadow = BoxShadow(
+    color: Color(0x1A000000),
+    blurRadius: 8,
+    offset: Offset(0, 2),
+  );
+
+  // ── Glass surface ───────────────────────────────────────────────────────────
+  static const glassSurface = Color(0x14FFFFFF); // white at ~0.08 opacity
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

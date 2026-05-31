@@ -19,7 +19,7 @@ class OrderRepositoryImpl implements OrderRepository {
   }) async {
     try {
       final orderRow = await supabase.from('orders').insert({
-        'client_id': detaillantId,
+        'detaillant_id': detaillantId,
         'store_id': storeId,
         'total': total,
         if (notes case final n?) 'notes': n,
@@ -55,7 +55,7 @@ class OrderRepositoryImpl implements OrderRepository {
       final rows = await supabase
           .from('orders')
           .select('*, stores(name), order_items(*)')
-          .eq('client_id', detaillantId)
+          .eq('detaillant_id', detaillantId)
           .order('created_at', ascending: false);
 
       final parsed = rows as List<dynamic>;

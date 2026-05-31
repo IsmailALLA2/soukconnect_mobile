@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/sizer.dart';
+import '../../../../core/widgets/green_spinner.dart';
 
 class CartBottomBar extends StatelessWidget {
   const CartBottomBar({
@@ -73,10 +74,7 @@ class CartBottomBar extends StatelessWidget {
                     ? SizedBox(
                         width: 18.sp,
                         height: 18.sp,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: AppColors.white,
-                        ),
+                        child: const GreenSpinner(size: 18, color: AppColors.white),
                       )
                     : Text('Passer la commande'),
               ),

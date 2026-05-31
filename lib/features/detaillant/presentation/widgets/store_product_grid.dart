@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/sizer.dart';
+import '../../../../core/widgets/app_dialog.dart';
+import '../../../../core/widgets/app_snackbar.dart';
 import '../../domain/entities/cart_item.dart';
 import '../../domain/entities/product_entity.dart';
 import '../providers/cart_provider.dart';
@@ -37,55 +39,34 @@ class ProductGrid extends ConsumerWidget {
                     storeId: storeId,
                   ));
               if (result is CartAdded) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${products[index].name} ajouté au panier'),
-                    behavior: SnackBarBehavior.floating,
-                    duration: const Duration(seconds: 2),
-                  ),
+                AppSnackbar.show(
+                  context,
+                  message: '${products[index].name} ajouté au panier',
+                  type: SnackbarType.success,
                 );
               } else if (result is CartStoreConflict) {
-                showDialog<void>(
-                  context: context,
-                  builder: (dialogContext) => AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.r),
-                    ),
-                    title: const Text('Changer de boutique'),
-                    content: const Text(
-                      'Votre panier contient déjà des produits d\'une autre '
+                AppDialog.confirm(
+                  context,
+                  title: 'Changer de boutique',
+                  message: 'Votre panier contient déjà des produits d\'une autre '
                       'boutique. Voulez-vous vider le panier et ajouter ce '
                       'produit ?',
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(dialogContext).pop(),
-                        child: const Text('Annuler'),
-                      ),
-                      FilledButton(
-                        onPressed: () {
-                          ref
-                              .read(cartNotifierProvider.notifier)
-                              .forceClearAndAdd(CartItem(
-                                product: products[index],
-                                quantity: 1,
-                                storeId: storeId,
-                              ));
-                          Navigator.of(dialogContext).pop();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '${products[index].name} ajouté au panier',
-                              ),
-                              behavior: SnackBarBehavior.floating,
-                              duration: const Duration(seconds: 2),
-                            ),
-                          );
-                        },
-                        child: const Text('Vider et ajouter'),
-                      ),
-                    ],
-                  ),
+                  onConfirm: () {
+                    ref
+                        .read(cartNotifierProvider.notifier)
+                        .forceClearAndAdd(CartItem(
+                          product: products[index],
+                          quantity: 1,
+                          storeId: storeId,
+                        ));
+                    AppSnackbar.show(
+                      context,
+                      message: '${products[index].name} ajouté au panier',
+                      type: SnackbarType.success,
+                    );
+                  },
+                  type: DialogType.warning,
+                  confirmLabel: 'Vider et ajouter',
                 );
               }
             },

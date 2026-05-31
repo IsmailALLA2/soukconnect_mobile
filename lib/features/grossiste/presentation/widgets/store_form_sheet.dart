@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/failure.dart';
 import '../../../../core/utils/sizer.dart';
+import '../../../../core/widgets/green_spinner.dart';
 import '../../../detaillant/domain/entities/store_entity.dart';
 import '../../data/models/store_params.dart';
 import '../../domain/entities/my_store_entity.dart';
@@ -117,7 +118,7 @@ class _StoreFormSheetState extends ConsumerState<_StoreFormSheet> {
                       widget.mode == _SheetMode.create
                           ? 'Créer ma boutique'
                           : 'Modifier ma boutique',
-                      style: AppTextStyles.titleLarge(color: AppColors.grey900),
+                      style: AppTextStyles.titleLarge(color: Theme.of(context).colorScheme.onSurface),
                     ),
                   ),
                   IconButton(
@@ -227,10 +228,7 @@ class _StoreFormSheetState extends ConsumerState<_StoreFormSheet> {
                         ? SizedBox(
                             height: 20.h,
                             width: 20.h,
-                            child: const CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: AppColors.white,
-                            ),
+                            child: const GreenSpinner(size: 22, color: AppColors.white),
                           )
                         : Text(
                             widget.mode == _SheetMode.create
@@ -306,7 +304,7 @@ class _StoreFormSheetState extends ConsumerState<_StoreFormSheet> {
             padding: EdgeInsets.all(16.w),
             child: Text(
               'Choisir une catégorie',
-              style: AppTextStyles.titleMedium(color: AppColors.grey900),
+              style: AppTextStyles.titleMedium(color: Theme.of(context).colorScheme.onSurface),
             ),
           ),
           ...StoreCategory.values.map(
@@ -353,7 +351,7 @@ class _StoreFormSheetState extends ConsumerState<_StoreFormSheet> {
             padding: EdgeInsets.all(16.w),
             child: Text(
               'Choisir une wilaya',
-              style: AppTextStyles.titleMedium(color: AppColors.grey900),
+              style: AppTextStyles.titleMedium(color: Theme.of(context).colorScheme.onSurface),
             ),
           ),
           SizedBox(
@@ -454,7 +452,7 @@ class _DropdownField extends StatelessWidget {
         child: Text(
           value.isEmpty ? 'Sélectionner...' : value,
           style: AppTextStyles.bodyMedium(
-            color: value.isEmpty ? AppColors.grey500 : AppColors.grey900,
+            color: value.isEmpty ? AppColors.grey500 : Theme.of(context).colorScheme.onSurface,
           ),
         ),
       ),

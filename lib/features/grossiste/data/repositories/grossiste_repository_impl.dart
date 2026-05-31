@@ -202,7 +202,7 @@ class GrossisteRepositoryImpl implements GrossisteRepository {
     try {
       final rows = await supabase
           .from('orders')
-          .select('*, profiles!inner(full_name, phone), order_items(*)')
+          .select('*, profiles!orders_detaillant_id_fkey(full_name, phone), order_items(*)')
           .eq('store_id', storeId)
           .order('created_at', ascending: false);
 

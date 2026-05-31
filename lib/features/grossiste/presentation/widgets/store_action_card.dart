@@ -62,7 +62,7 @@ class _ActionTile extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: AppTextStyles.titleSmall(color: AppColors.grey900),
+        style: AppTextStyles.titleSmall(color: Theme.of(context).colorScheme.onSurface),
       ),
       subtitle: Text(
         subtitle,

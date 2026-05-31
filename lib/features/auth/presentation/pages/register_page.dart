@@ -142,7 +142,7 @@ class RegisterPage extends HookConsumerWidget {
       } catch (_) {
         formN.setError('Une erreur inattendue est survenue.');
       } finally {
-        formN.setLoading(false);
+        if (context.mounted) formN.setLoading(false);
       }
     }
 

@@ -15,69 +15,136 @@ class OrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = context.colorScheme;
+    final statusColor = _statusColor(order.statusEnum);
 
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-      elevation: 0,
-      color: theme.surface,
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
-        borderRadius: BorderRadius.circular(12.r),
         onTap: () => _showDetailSheet(context),
-        child: Padding(
-          padding: EdgeInsets.all(14.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.store_rounded, size: 18.sp, color: theme.primary),
-                  SizedBox(width: 8.w),
-                  Expanded(
-                    child: Text(
-                      order.storeName ?? 'Boutique',
-                      style: AppTextStyles.titleSmall(
-                        color: theme.onSurface,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              left: BorderSide(
+                color: statusColor,
+                width: 4.w,
+              ),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(14.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 40.w,
+                      height: 40.w,
+                      decoration: BoxDecoration(
+                        color: statusColor.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      child: Icon(
+                        _statusIcon(order.statusEnum),
+                        size: 20.sp,
+                        color: statusColor,
+                      ),
                     ),
-                  ),
-                  OrderStatusChip(status: order.statusEnum),
-                ],
-              ),
-              SizedBox(height: 10.h),
-              Row(
-                children: [
-                  _InfoChip(
-                    icon: Icons.calendar_today_rounded,
-                    label: _formatDate(order.createdAt),
-                  ),
-                  SizedBox(width: 16.w),
-                  _InfoChip(
-                    icon: Icons.inventory_2_rounded,
-                    label: '${order.items.length} article${order.items.length > 1 ? 's' : ''}',
-                  ),
-                ],
-              ),
-              SizedBox(height: 8.h),
-              Text(
-                '${order.total.toStringAsFixed(2)} MAD',
-                style: AppTextStyles.titleMedium(
-                  color: theme.primary,
+                    SizedBox(width: 10.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            order.storeName ?? 'Boutique',
+                            style: AppTextStyles.titleSmall(
+                              color: theme.onSurface,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            _formatTimeAgo(order.createdAt),
+                            style: AppTextStyles.bodySmall(
+                              color: AppColors.grey500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    OrderStatusChip(status: order.statusEnum),
+                  ],
                 ),
-              ),
-            ],
+                SizedBox(height: 10.h),
+                Row(
+                  children: [
+                    _InfoChip(
+                      icon: Icons.calendar_today_rounded,
+                      label: _formatDate(order.createdAt),
+                    ),
+                    SizedBox(width: 16.w),
+                    _InfoChip(
+                      icon: Icons.inventory_2_rounded,
+                      label:
+                          '${order.items.length} article${order.items.length > 1 ? 's' : ''}',
+                    ),
+                    const Spacer(),
+                    Text(
+                      '${order.total.toStringAsFixed(0)} MAD',
+                      style: AppTextStyles.titleMedium(color: statusColor),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}/'
-        '${date.month.toString().padLeft(2, '0')}/'
-        '${date.year}';
+  Color _statusColor(OrderStatus s) {
+    switch (s) {
+      case OrderStatus.pending:
+        return AppColors.warning;
+      case OrderStatus.confirmed:
+        return AppColors.success;
+      case OrderStatus.delivered:
+        return AppColors.info;
+      case OrderStatus.cancelled:
+        return AppColors.error;
+    }
+  }
+
+  IconData _statusIcon(OrderStatus s) {
+    switch (s) {
+      case OrderStatus.pending:
+        return Icons.hourglass_empty_rounded;
+      case OrderStatus.confirmed:
+        return Icons.check_circle_rounded;
+      case OrderStatus.delivered:
+        return Icons.local_shipping_rounded;
+      case OrderStatus.cancelled:
+        return Icons.cancel_rounded;
+    }
+  }
+
+  String _formatTimeAgo(DateTime dt) {
+    final now = DateTime.now();
+    final diff = now.difference(dt);
+    if (diff.inMinutes < 1) return 'À l\'instant';
+    if (diff.inMinutes < 60) return 'Il y a ${diff.inMinutes} min';
+    if (diff.inHours < 24) return 'Il y a ${diff.inHours}h';
+    if (diff.inDays < 7) return 'Il y a ${diff.inDays}j';
+    return _formatDate(dt);
+  }
+
+  String _formatDate(DateTime dt) {
+    return '${dt.day.toString().padLeft(2, '0')}/'
+        '${dt.month.toString().padLeft(2, '0')}/'
+        '${dt.year}';
   }
 
   void _showDetailSheet(BuildContext context) {

@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/sizer.dart';
+import '../../../../core/widgets/green_spinner.dart';
 import '../providers/location_provider.dart';
 import '../providers/store_provider.dart';
 import '../widgets/widgets.dart';
@@ -59,7 +60,7 @@ class _MapLoading extends StatelessWidget {
           onPressed: () => GoRouter.of(context).pop(),
         ),
       ),
-      body: const Center(child: CircularProgressIndicator()),
+      body: const Center(child: GreenSpinner()),
     );
   }
 }

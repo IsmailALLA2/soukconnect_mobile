@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/sizer.dart';
+import '../../../../core/widgets/green_spinner.dart';
 
 /// A small field label shown above each form input.
 class AuthFieldLabel extends StatelessWidget {
@@ -84,10 +85,7 @@ class AuthSubmitButton extends StatelessWidget {
             ? SizedBox(
                 width:  22.w,
                 height: 22.w,
-                child: const CircularProgressIndicator(
-                  color:       AppColors.white,
-                  strokeWidth: 2.5,
-                ),
+                child: const GreenSpinner(size: 22, color: AppColors.white),
               )
             : Text(
                 label,

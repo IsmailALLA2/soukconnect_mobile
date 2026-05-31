@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/extensions/context_extensions.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/sizer.dart';
+import '../../../../core/widgets/app_snackbar.dart';
 import '../../domain/entities/store_entity.dart';
 import 'store_distance_badge.dart';
 
@@ -26,11 +27,10 @@ class StoreInfoSection extends StatelessWidget {
                 style: AppTextStyles.bodyMedium(color: context.colorScheme.onSurface),
               ),
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(store.phone),
-                    behavior: SnackBarBehavior.floating,
-                  ),
+                AppSnackbar.show(
+                  context,
+                  message: store.phone,
+                  type: SnackbarType.info,
                 );
               },
             ),

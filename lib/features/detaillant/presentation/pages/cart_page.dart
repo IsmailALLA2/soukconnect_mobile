@@ -8,6 +8,8 @@ import '../../domain/usecases/place_order_usecase.dart';
 import '../providers/cart_provider.dart';
 import '../widgets/widgets.dart';
 
+import '../../../../core/widgets/app_snackbar.dart';
+
 class CartPage extends HookConsumerWidget {
   const CartPage({super.key});
 
@@ -95,11 +97,10 @@ class CartPage extends HookConsumerWidget {
                       }
                     } catch (_) {
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Erreur lors de la commande'),
-                            behavior: SnackBarBehavior.floating,
-                          ),
+                        AppSnackbar.show(
+                          context,
+                          message: 'Erreur lors de la commande',
+                          type: SnackbarType.error,
                         );
                       }
                     } finally {

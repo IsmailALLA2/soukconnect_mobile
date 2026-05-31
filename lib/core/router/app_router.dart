@@ -112,18 +112,33 @@ GoRouter appRouter(AppRouterRef ref) {
 
     // ── Route tree ──────────────────────────────────────────────────────────
     routes: [
-      // ── Auth ──────────────────────────────────────────────────────────────
+      // ── Auth (fade transition) ─────────────────────────────────────────────
       GoRoute(
         path: AppRoutes.splash,
-        builder: (context, state) => const SplashPage(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const SplashPage(),
+          transitionDuration: const Duration(milliseconds: 400),
+          transitionsBuilder: _fadeTransition,
+        ),
       ),
       GoRoute(
         path: AppRoutes.login,
-        builder: (context, state) => const LoginPage(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const LoginPage(),
+          transitionDuration: const Duration(milliseconds: 400),
+          transitionsBuilder: _fadeTransition,
+        ),
       ),
       GoRoute(
         path: AppRoutes.register,
-        builder: (context, state) => const RegisterPage(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const RegisterPage(),
+          transitionDuration: const Duration(milliseconds: 400),
+          transitionsBuilder: _fadeTransition,
+        ),
       ),
 
       // ── Détaillant shell ───────────────────────────────────────────────────
@@ -153,11 +168,21 @@ GoRouter appRouter(AppRouterRef ref) {
       // ── Détaillant detail pages (full-screen, outside shell) ───────────────
       GoRoute(
         path: AppRoutes.detaillantStoreDetail,
-        builder: (context, state) => const StoreDetailPage(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const StoreDetailPage(),
+          transitionDuration: const Duration(milliseconds: 350),
+          transitionsBuilder: _slideFromRightTransition,
+        ),
       ),
       GoRoute(
         path: AppRoutes.detaillantStoreMap,
-        builder: (context, state) => const StoreMapPage(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const StoreMapPage(),
+          transitionDuration: const Duration(milliseconds: 400),
+          transitionsBuilder: _fadeScaleTransition,
+        ),
       ),
 
       // ── Grossiste shell ────────────────────────────────────────────────────
@@ -204,6 +229,49 @@ GoRouter appRouter(AppRouterRef ref) {
           ],
         ),
       ),
+    ),
+  );
+}
+
+// ── Page transition builders ───────────────────────────────────────────────────
+
+Widget _fadeTransition(
+  BuildContext context,
+  Animation<double> animation,
+  Animation<double> secondaryAnimation,
+  Widget child,
+) {
+  return FadeTransition(opacity: animation, child: child);
+}
+
+Widget _slideFromRightTransition(
+  BuildContext context,
+  Animation<double> animation,
+  Animation<double> secondaryAnimation,
+  Widget child,
+) {
+  return SlideTransition(
+    position: Tween<Offset>(
+      begin: const Offset(1, 0),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic)),
+    child: child,
+  );
+}
+
+Widget _fadeScaleTransition(
+  BuildContext context,
+  Animation<double> animation,
+  Animation<double> secondaryAnimation,
+  Widget child,
+) {
+  return FadeTransition(
+    opacity: animation,
+    child: ScaleTransition(
+      scale: Tween<double>(begin: 0.95, end: 1.0).animate(
+        CurvedAnimation(parent: animation, curve: Curves.easeOut),
+      ),
+      child: child,
     ),
   );
 }

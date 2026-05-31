@@ -17,11 +17,23 @@ class OrderStatusChip extends StatelessWidget {
         color: _backgroundColor,
         borderRadius: BorderRadius.circular(20.r),
       ),
-      child: Text(
-        status.label,
-        style: AppTextStyles.labelSmall(
-          color: _foregroundColor,
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6.w,
+            height: 6.w,
+            decoration: BoxDecoration(
+              color: _foregroundColor,
+              shape: BoxShape.circle,
+            ),
+          ),
+          SizedBox(width: 4.w),
+          Text(
+            status.label,
+            style: AppTextStyles.labelSmall(color: _foregroundColor),
+          ),
+        ],
       ),
     );
   }
@@ -29,26 +41,26 @@ class OrderStatusChip extends StatelessWidget {
   Color get _backgroundColor {
     switch (status) {
       case OrderStatus.pending:
-        return const Color(0xFFFFF3E0);
+        return AppColors.warningLight;
       case OrderStatus.confirmed:
-        return const Color(0xFFE3F2FD);
+        return AppColors.successLight;
       case OrderStatus.delivered:
-        return const Color(0xFFE8F5E9);
+        return AppColors.infoLight;
       case OrderStatus.cancelled:
-        return const Color(0xFFFFEBEE);
+        return AppColors.errorLight;
     }
   }
 
   Color get _foregroundColor {
     switch (status) {
       case OrderStatus.pending:
-        return const Color(0xFFE65100);
+        return AppColors.warning;
       case OrderStatus.confirmed:
-        return const Color(0xFF1565C0);
+        return AppColors.success;
       case OrderStatus.delivered:
-        return const Color(0xFF2E7D32);
+        return AppColors.info;
       case OrderStatus.cancelled:
-        return const Color(0xFFC62828);
+        return AppColors.error;
     }
   }
 }
